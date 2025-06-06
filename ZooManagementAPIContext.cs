@@ -9,9 +9,9 @@ namespace ZooManagementAPI
         
         // Put all the tables you want in your database here
         public DbSet<Animal> Animals { get; set; }
-        // public DbSet<Enclosure> Enclosures { get; set; }
-        // public DbSet<Zookeeper> Zookeepers { get; set; }
-        // public DbSet<ZookeeperAndAnimal> ZookeeperAndAnimals { get; set; }
-        // public DbSet<ZookeeperAndEnclosure> ZookeeperAndEnclosures { get; set; }
+        public DbSet<Enclosure> Enclosures { get; set; }
+        public DbSet<Zookeeper> Zookeepers { get; set; }
+        public DbSet<ZookeeperAndAnimal> ZookeeperAndAnimals { get; set; }
+        public DbSet<ZookeeperAndEnclosure> ZookeeperAndEnclosures { get; set; }
     }
 };

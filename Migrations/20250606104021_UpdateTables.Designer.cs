@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZooManagementAPI;
 
@@ -10,9 +11,11 @@ using ZooManagementAPI;
 namespace ZooManagementAPI.Migrations
 {
     [DbContext(typeof(ZooManagementAPIContext))]
-    partial class ZooManagementAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20250606104021_UpdateTables")]
+    partial class UpdateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");

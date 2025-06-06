@@ -156,3 +156,4 @@ C:\Users\HanOse\Training\ZooManagementAPI\obj\Debug\net8.0\refint\ZooManagementA
 C:\Users\HanOse\Training\ZooManagementAPI\obj\Debug\net8.0\ZooManagementAPI.pdb
 C:\Users\HanOse\Training\ZooManagementAPI\obj\Debug\net8.0\ZooManagementAPI.genruntimeconfig.cache
 C:\Users\HanOse\Training\ZooManagementAPI\obj\Debug\net8.0\ref\ZooManagementAPI.dll
+C:\Users\HanOse\Training\ZooManagementAPI\obj\Debug\net8.0\ZooManagementAPI.sourcelink.json

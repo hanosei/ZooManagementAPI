@@ -11,8 +11,9 @@ namespace ZooManagementAPI.Models
         public DateTime DateAcquired { get; set; }
         public DateTime? DateLeft { get; set; }
         public string? TransferredToZoo { get; set; } //name of zoo it went to if transferred
-        public string AnimalStatus { get; set; } //to check if anumal is dead, transferred , or active in zoo
-        public int EnclosureId { get; set; }
+        public string? AnimalStatus { get; set; } //to check if anumal is dead, transferred , or active in zoo
+        public int EnclosureId  { get; set; }
+        public Enclosure Enclosure { get; set; }
 
     }
 }
