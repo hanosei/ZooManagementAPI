@@ -15,6 +15,14 @@ builder.Services.AddDbContext<ZooManagementAPIContext>(options => options.UseSql
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ZooManagementAPIContext>();
+    context.SeedEnclosures();
+    context.SeedAnimals();
+}
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

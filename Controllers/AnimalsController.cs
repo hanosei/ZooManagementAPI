@@ -15,7 +15,7 @@ namespace ZooManagementAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("AnimalId/{AnimalId}")]
+        [HttpGet("{AnimalId}")]
         public IActionResult GetAnimalById(int AnimalId)
         {
             var animal = _context.Animals.Find(AnimalId);
