@@ -67,26 +67,53 @@ namespace ZooManagementAPI.Controllers
                                         int? age,
                                         DateOnly? dateAcquired,
                                         int pageSize = 5,
-                                        int pageNumber = 1
+                                        int pageNumber = 1,
+                                        string? orderResults = "species"
                                         )
         {
-            
+
             var queryAnimals = _context.Animals.AsQueryable();
-            if (!string.IsNullOrEmpty(species)) {
+            if (!string.IsNullOrEmpty(species))
+            {
                 queryAnimals = queryAnimals.Where(animals => animals.Species.ToLower().Contains(species.ToLower()));
             }
-             if (!string.IsNullOrEmpty(classification)) {
+            if (!string.IsNullOrEmpty(classification))
+            {
                 queryAnimals = queryAnimals.Where(animals => animals.Classification.ToLower().Contains(classification.ToLower()));
             }
-             if (!string.IsNullOrEmpty(name)) {
+            if (!string.IsNullOrEmpty(name))
+            {
                 queryAnimals = queryAnimals.Where(animals => animals.Name.ToLower().Contains(name.ToLower()));
             }
-             if (age.HasValue) {
+            if (age.HasValue)
+            {
                 int currentYear = DateTime.Now.Year;
                 queryAnimals = queryAnimals.Where(animals => (currentYear - animals.DateOfBirth.Year) == age);
             }
-             if (dateAcquired.HasValue) {
+            if (dateAcquired.HasValue)
+            {
                 queryAnimals = queryAnimals.Where(animals => DateOnly.FromDateTime(animals.DateAcquired) == dateAcquired.Value);
+            }
+
+            var validOrderOptions = new[] { "name", "species", "classification", "age", "date acquired" };
+            orderResults = validOrderOptions.Contains(orderResults?.ToLower()) ? orderResults.ToLower() : "species";
+            switch (orderResults)
+            {
+                case "name":
+                    queryAnimals = queryAnimals.OrderBy(animals => animals.Name);
+                    break;
+                case "classification":
+                    queryAnimals = queryAnimals.OrderBy(animals => animals.Classification);
+                    break;
+                case "age":
+                    queryAnimals = queryAnimals.OrderBy(animals => animals.DateOfBirth);
+                    break;
+                case "date acquired":
+                    queryAnimals = queryAnimals.OrderBy(animals => animals.DateAcquired);
+                    break;
+                default:
+                    queryAnimals = queryAnimals.OrderBy(animals => animals.Species);
+                    break;
             }
 
             int totalQuery = queryAnimals.Count();
@@ -113,7 +140,7 @@ namespace ZooManagementAPI.Controllers
                 {
                     message = "No animals match your search. Try again"
                 };
-                
+
                 return Ok(response);
             }
         }
