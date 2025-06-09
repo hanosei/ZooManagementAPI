@@ -66,20 +66,20 @@ namespace ZooManagementAPI.Controllers
                                         string? name,
                                         int? age,
                                         DateOnly? dateAcquired,
-                                        int? pageSize,
-                                        int? pageNumber
+                                        int pageSize = 5,
+                                        int pageNumber = 1
                                         )
         {
             
             var queryAnimals = _context.Animals.AsQueryable();
             if (!string.IsNullOrEmpty(species)) {
-                queryAnimals = queryAnimals.Where(animals => animals.Species == species);
+                queryAnimals = queryAnimals.Where(animals => animals.Species.ToLower().Contains(species.ToLower()));
             }
              if (!string.IsNullOrEmpty(classification)) {
-                queryAnimals = queryAnimals.Where(animals => animals.Classification == classification);
+                queryAnimals = queryAnimals.Where(animals => animals.Classification.ToLower().Contains(classification.ToLower()));
             }
              if (!string.IsNullOrEmpty(name)) {
-                queryAnimals = queryAnimals.Where(animals => animals.Name == name);
+                queryAnimals = queryAnimals.Where(animals => animals.Name.ToLower().Contains(name.ToLower()));
             }
              if (age.HasValue) {
                 int currentYear = DateTime.Now.Year;
@@ -89,7 +89,33 @@ namespace ZooManagementAPI.Controllers
                 queryAnimals = queryAnimals.Where(animals => DateOnly.FromDateTime(animals.DateAcquired) == dateAcquired.Value);
             }
 
-            return Ok(queryAnimals);
+            int totalQuery = queryAnimals.Count();
+            if (totalQuery > 0)
+            {
+                int totalPagesNeeded = (int)Math.Ceiling((double)totalQuery / pageSize);
+                int skipRecords = totalQuery / totalPagesNeeded * (pageNumber - 1);
+                var chosenPage = queryAnimals.Skip(skipRecords).Take(pageSize).ToList();
+
+                var response = new
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalPages = totalPagesNeeded,
+                    TotalRecords = totalQuery,
+                    Animals = chosenPage
+                };
+
+                return Ok(response);
+            }
+            else
+            {
+                var response = new
+                {
+                    message = "No animals match your search. Try again"
+                };
+                
+                return Ok(response);
+            }
         }
     }
 }
