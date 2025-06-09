@@ -68,7 +68,8 @@ namespace ZooManagementAPI.Controllers
                                         DateOnly? dateAcquired,
                                         int pageSize = 5,
                                         int pageNumber = 1,
-                                        string? orderResults = "species"
+                                        string? orderResults = "species",
+                                        bool descending = false
                                         )
         {
 
@@ -100,19 +101,19 @@ namespace ZooManagementAPI.Controllers
             switch (orderResults)
             {
                 case "name":
-                    queryAnimals = queryAnimals.OrderBy(animals => animals.Name);
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.Name) : queryAnimals.OrderBy(animals => animals.Name);
                     break;
                 case "classification":
-                    queryAnimals = queryAnimals.OrderBy(animals => animals.Classification);
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.Classification) : queryAnimals.OrderBy(animals => animals.Classification);
                     break;
                 case "age":
-                    queryAnimals = queryAnimals.OrderBy(animals => animals.DateOfBirth);
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.DateOfBirth): queryAnimals.OrderBy(animals => animals.DateOfBirth);
                     break;
                 case "date acquired":
-                    queryAnimals = queryAnimals.OrderBy(animals => animals.DateAcquired);
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.DateAcquired): queryAnimals.OrderBy(animals => animals.DateAcquired);
                     break;
                 default:
-                    queryAnimals = queryAnimals.OrderBy(animals => animals.Species);
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.Species): queryAnimals.OrderBy(animals => animals.Species);
                     break;
             }
 
