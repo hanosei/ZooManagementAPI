@@ -44,10 +44,10 @@ namespace ZooManagementAPI.Controllers
             _context.Animals.Add(animal);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetAnimalById), new{AnimalId = animal.AnimalId}, animal);
+            return CreatedAtAction(nameof(GetAnimalById), new { AnimalId = animal.AnimalId }, animal);
         }
 
-        
+
         [HttpGet("AnimalType/{AnimalType}")]
         public IActionResult GetAnimalsBySpecies(string AnimalType)
         {
@@ -58,6 +58,38 @@ namespace ZooManagementAPI.Controllers
             if (!animals.Any()) return NotFound("There are no animals found for that species");
 
             return Ok(animals);
+        }
+
+        [HttpGet("Search")]
+        public IActionResult SearchAnimals(string? species,
+                                        string? classification,
+                                        string? name,
+                                        int? age,
+                                        DateOnly? dateAcquired,
+                                        int? pageSize,
+                                        int? pageNumber
+                                        )
+        {
+            
+            var queryAnimals = _context.Animals.AsQueryable();
+            if (!string.IsNullOrEmpty(species)) {
+                queryAnimals = queryAnimals.Where(animals => animals.Species == species);
+            }
+             if (!string.IsNullOrEmpty(classification)) {
+                queryAnimals = queryAnimals.Where(animals => animals.Classification == classification);
+            }
+             if (!string.IsNullOrEmpty(name)) {
+                queryAnimals = queryAnimals.Where(animals => animals.Name == name);
+            }
+             if (age.HasValue) {
+                int currentYear = DateTime.Now.Year;
+                queryAnimals = queryAnimals.Where(animals => (currentYear - animals.DateOfBirth.Year) == age);
+            }
+             if (dateAcquired.HasValue) {
+                queryAnimals = queryAnimals.Where(animals => DateOnly.FromDateTime(animals.DateAcquired) == dateAcquired.Value);
+            }
+
+            return Ok(queryAnimals);
         }
     }
 }
