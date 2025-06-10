@@ -12,6 +12,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ZooManagementAPIContext>(options => options.UseSqlite("Data Source=zoo.db"));
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 
 var app = builder.Build();
 
@@ -21,7 +25,6 @@ using (var scope = app.Services.CreateScope())
     context.SeedEnclosures();
     context.SeedAnimals();
 }
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
