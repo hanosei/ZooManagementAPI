@@ -26,19 +26,38 @@ namespace ZooManagementAPI.Controllers
 
             if (zookeeper == null) return NotFound();
 
-            var zookeeperEnclosures = zookeeper.ZookeeperAndEnclosures.Select(zookeeeperEnclosures => zookeeeperEnclosures.Enclosure).ToList();
-            var zookeeperAnimals = zookeeper.ZookeeperAndAnimals.Select(zookeeeperAnimals => zookeeeperAnimals.Animal).ToList();
+            var zookeeperEnclosures = zookeeper.ZookeeperAndEnclosures.Select(zookeeeperEnclosures =>
+                                        new EnclosureDto
+                                        {
+                                            EnclosureId = zookeeeperEnclosures.Enclosure.EnclosureId,
+                                            EnclosureName = zookeeeperEnclosures.Enclosure.Name
+                                        }).ToList();
+            var zookeeperAnimals = zookeeper.ZookeeperAndAnimals.Select(zookeeeperAnimals =>
+                                        new AnimalDto
+                                        {
+                                            AnimalId = zookeeeperAnimals.Animal.AnimalId,
+                                            AnimalName = zookeeeperAnimals.Animal.Name,
+                                            AnimalSpecies = zookeeeperAnimals.Animal.Species,
+                                            AnimalClassifiction = zookeeeperAnimals.Animal.Classification
 
-            var zookeeperDetails = new
+                                        }).ToList();
+
+            var zookeeperDetails = new ZookeeperDto
             {
-                KeeperId = zookeeper.ZookeeperId,
-                ZookeeperName = zookeeper.Name,
+                ZooKeeperId = zookeeper.ZookeeperId,
+                ZooKeeperName = zookeeper.Name,
                 Enclosures = zookeeperEnclosures,
                 Animals = zookeeperAnimals
             };
 
             return Ok(zookeeperDetails);
         }
+        
+        // [HttpPost]
+        // public IActionResult AddZookeeper()
+        // {
+           
+        // }
     
     }
 }
