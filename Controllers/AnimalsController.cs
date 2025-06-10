@@ -19,11 +19,30 @@ namespace ZooManagementAPI.Controllers
         [HttpGet("{AnimalId}")]
         public IActionResult GetAnimalById(int AnimalId)
         {
-            var animal = _context.Animals.Find(AnimalId);
+            var animal = _context.Animals.Include(animal => animal.ZookeeperAndAnimals)
+                        .ThenInclude(zookeeperAnimal => zookeeperAnimal.Zookeeper)
+                        .FirstOrDefault(animal => animal.AnimalId == AnimalId);
 
             if (animal == null) return NotFound();
 
-            return Ok(animal);
+            var animalDetails = new
+            {
+                Name = animal.Name,
+                Species = animal.Species,
+                Classification = animal.Classification,
+                Sex = animal.Sex,
+                DateOfBirth = animal.DateOfBirth,
+                DateAcquired = animal.DateAcquired,
+                DateLeft = animal.DateLeft,
+                TransferredToZoo = animal.TransferredToZoo,
+                AnimalStatus = animal.AnimalStatus,
+                EnclosureId = animal.EnclosureId,
+                Enclosure = animal.Enclosure,
+                ZookeperNames = animal.ZookeeperAndAnimals.Select(zookepername => zookepername.Zookeeper.Name).ToList()
+                
+            };
+
+            return Ok(animalDetails);
         }
 
         [HttpPost]
@@ -89,7 +108,10 @@ namespace ZooManagementAPI.Controllers
                                         )
         {
 
-            var queryAnimals = _context.Animals.AsQueryable();
+            var queryAnimals = _context.Animals.Include(animal => animal.ZookeeperAndAnimals)
+                        .ThenInclude(zookeeperAnimal => zookeeperAnimal.Zookeeper)
+                        .AsQueryable();
+
             if (!string.IsNullOrEmpty(species))
             {
                 queryAnimals = queryAnimals.Where(animals => animals.Species.ToLower().Contains(species.ToLower()));
@@ -148,13 +170,30 @@ namespace ZooManagementAPI.Controllers
                 int skipRecords = totalQuery / totalPagesNeeded * (pageNumber - 1);
                 var chosenPage = queryAnimals.Skip(skipRecords).Take(pageSize).ToList();
 
+                var animalsWithZookeepers = chosenPage.Select(animal => new
+                {
+                Name = animal.Name,
+                Species = animal.Species,
+                Classification = animal.Classification,
+                Sex = animal.Sex,
+                DateOfBirth = animal.DateOfBirth,
+                DateAcquired = animal.DateAcquired,
+                DateLeft = animal.DateLeft,
+                TransferredToZoo = animal.TransferredToZoo,
+                AnimalStatus = animal.AnimalStatus,
+                EnclosureId = animal.EnclosureId,
+                Enclosure = animal.Enclosure?.Name,
+                ZookeperNames = animal.ZookeeperAndAnimals.Select(zookepername => zookepername.Zookeeper.Name).ToList()
+                    
+                });
+
                 var response = new
                 {
                     PageNumber = pageNumber,
                     PageSize = pageSize,
                     TotalPages = totalPagesNeeded,
                     TotalRecords = totalQuery,
-                    Animals = chosenPage
+                    Animals = animalsWithZookeepers
                 };
 
                 return Ok(response);

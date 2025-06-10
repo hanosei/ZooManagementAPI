@@ -8,6 +8,8 @@ namespace ZooManagementAPI.Dtos
 
         public string AnimalSpecies { get; set; }
 
-        public string AnimalClassifiction{ get; set; }
+        public string AnimalClassifiction { get; set; }
+        
+        public List<string> ZookeeperNames { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,27 @@ namespace ZooManagementAPI
         public DbSet<Zookeeper> Zookeepers { get; set; }
         public DbSet<ZookeeperAndAnimal> ZookeeperAndAnimals { get; set; }
         public DbSet<ZookeeperAndEnclosure> ZookeeperAndEnclosures { get; set; }
+
+        public void SeedZookeeper()
+        {
+            if (Zookeepers.Any()) return;
+
+            var zookeepers = new List<Zookeeper> {
+                new Zookeeper {Name = "Bob"},
+                new Zookeeper {Name = "Sarah"},
+                new Zookeeper {Name = "Tom"},
+                new Zookeeper {Name = "Lucy"},
+                new Zookeeper {Name = "Jack"},
+                new Zookeeper {Name = "Amy"},
+                new Zookeeper {Name = "Michael"},
+                new Zookeeper {Name = "Lisa"},
+                new Zookeeper {Name = "Alex"},
+                new Zookeeper {Name = "Tara"}
+            };
+
+            Zookeepers.AddRange(zookeepers);
+            SaveChanges();
+        }
 
         public void SeedEnclosures()
         {
@@ -36,8 +58,8 @@ namespace ZooManagementAPI
             Enclosures.AddRange(enclosures);
             SaveChanges();
         }
-        
-           public void SeedAnimals()
+
+        public void SeedAnimals()
         {
             if (Animals.Any()) return;
 
@@ -70,19 +92,19 @@ namespace ZooManagementAPI
                 {"Giraffe", "Giraffe Enclosure" },
                 {"Elephant", "Elephant Enclosure" },
                 {"Monkey", "Monkey Enclosure" },
-                
+
                 { "Parrot", "Aviary Enclosure"},
                 { "Owl", "Aviary Enclosure"},
-                
+
                 {"Hippo","Hippo Enclosure" },
-                
+
                 {"Fish", "Fish Enclosure" },
                 {"Dolphin", "Fish Enclosure"},
-                
+
                 { "Crocodile", "Reptile Enclosure"},
                 { "Iguana", "Reptile Enclosure"},
                 {"Snake", "Reptile Enclosure"},
-                
+
                 { "Sheep", "Farm Animal Enclosure"},
                 {"Goat", "Farm Animal Enclosure"}
             };
@@ -90,16 +112,16 @@ namespace ZooManagementAPI
 
             var enclosures = Enclosures.ToDictionary(enclosures => enclosures.Name, enclosures => enclosures.EnclosureId);
             string[] animalList = animalDictionary.Keys.ToArray();
-            
 
-            for(int i = 0; i <=100; i++)
+
+            for (int i = 0; i <= 100; i++)
             {
-                string randomAnimal = animalList.ElementAt(random.Next(0,animalList.Length));
+                string randomAnimal = animalList.ElementAt(random.Next(0, animalList.Length));
                 string randomAnimalEnclosure = animalEnclosure[randomAnimal];
                 int randomAnimalEnclosureId = enclosures[randomAnimalEnclosure];
-                DateTime dateOfBirth = DateTime.Now.AddYears(-random.Next(1 , 10));
-                DateTime dateAcquired = dateOfBirth.AddYears(random.Next(0 , 5));
-             
+                DateTime dateOfBirth = DateTime.Now.AddYears(-random.Next(1, 10));
+                DateTime dateAcquired = dateOfBirth.AddYears(random.Next(0, 5));
+
 
                 if (dateAcquired > DateTime.Now)
                 {
@@ -143,10 +165,54 @@ namespace ZooManagementAPI
                     TransferredToZoo = transferredToZoo
                 });
             }
-
-            
             SaveChanges();
         }
-    
-    }
+
+
+        public void SeedZookeeperAnimalRelationships()
+        {
+            if (ZookeeperAndAnimals.Any()) return;
+
+            var zookeepers = Zookeepers.ToList();
+            var animals = Animals.ToList();
+
+            var random = new Random();
+            var relationships = new List<ZookeeperAndAnimal>();
+
+            foreach (var animal in animals)
+            {
+                var zookeeper = zookeepers[random.Next(zookeepers.Count)];
+                relationships.Add(new ZookeeperAndAnimal
+                {
+                    ZookeeperId = zookeeper.ZookeeperId,
+                    AnimalId = animal.AnimalId
+                });
+            }
+            ZookeeperAndAnimals.AddRange(relationships);
+            SaveChanges();
+        }
+
+         public void SeedZookeeperEnclosureRelationships()
+        {
+            if (ZookeeperAndEnclosures.Any()) return;
+
+            var zookeepers = Zookeepers.ToList();
+            var enclosures = Enclosures.ToList();
+
+            var random = new Random();
+            var relationships = new List<ZookeeperAndEnclosure>();
+
+            foreach (var enclosure in enclosures)
+            {
+                var zookeeper = zookeepers[random.Next(zookeepers.Count)];
+                relationships.Add(new ZookeeperAndEnclosure
+                {
+                    ZookeeperId = zookeeper.ZookeeperId,
+                    EnclosureId = enclosure.EnclosureId
+                });
+            }
+            ZookeeperAndEnclosures.AddRange(relationships);
+            SaveChanges();
+        }
+    }  
 };
