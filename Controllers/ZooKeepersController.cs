@@ -53,11 +53,24 @@ namespace ZooManagementAPI.Controllers
             return Ok(zookeeperDetails);
         }
         
-        // [HttpPost]
-        // public IActionResult AddZookeeper()
-        // {
-           
-        // }
-    
+        [HttpPost]
+        public IActionResult AddZookeeper([FromBody] CreateZookeeperDto zookeeperDto)
+        {
+            if (zookeeperDto == null) return BadRequest();
+
+            var zookeeper = new Zookeeper
+            {
+                Name = zookeeperDto.ZookeeperName,
+                ZookeeperAndEnclosures = zookeeperDto.EnclosureIds.Select(zookeeperEnclosure => new ZookeeperAndEnclosure{
+                    EnclosureId = zookeeperEnclosure}).ToList(),
+                ZookeeperAndAnimals = zookeeperDto.AnimalIds.Select(zookeeperAnimals => new ZookeeperAndAnimal{
+                    AnimalId = zookeeperAnimals}).ToList()
+            };
+
+            _context.Zookeepers.Add(zookeeper);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetZookeeperById), new { ZookeeperId = zookeeper.ZookeeperId }, zookeeper);
+        }
     }
 }

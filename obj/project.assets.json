@@ -3623,19 +3623,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\SatSre\\.nuget\\packages\\": {}
+    "C:\\Users\\HanOse\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\SatSre\\training\\databases\\ZooManagementAPI\\ZooManagementAPI.csproj",
+      "projectUniqueName": "C:\\Users\\HanOse\\Training\\ZooManagementAPI\\ZooManagementAPI.csproj",
       "projectName": "ZooManagementAPI",
-      "projectPath": "C:\\Users\\SatSre\\training\\databases\\ZooManagementAPI\\ZooManagementAPI.csproj",
-      "packagesPath": "C:\\Users\\SatSre\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\SatSre\\training\\databases\\ZooManagementAPI\\obj\\",
+      "projectPath": "C:\\Users\\HanOse\\Training\\ZooManagementAPI\\ZooManagementAPI.csproj",
+      "packagesPath": "C:\\Users\\HanOse\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HanOse\\Training\\ZooManagementAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\SatSre\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\HanOse\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
