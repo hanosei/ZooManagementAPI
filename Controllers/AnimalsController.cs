@@ -1,6 +1,7 @@
 using ZooManagementAPI.Models;
 using ZooManagementAPI.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ZooManagementAPI.Controllers
 {
@@ -30,6 +31,18 @@ namespace ZooManagementAPI.Controllers
         {
             if (animalDto == null) return BadRequest();
 
+            //count of animals in animaldto.enclosure id from Animals table
+            //max capacity < count of animals 
+
+            var enclosure = _context.Enclosures.FirstOrDefault(animals => animals.EnclosureId == animalDto.EnclosureId);
+            var currentAnimalsInEnclosure = _context.Animals.Count(animals => animals.EnclosureId == animalDto.EnclosureId && animals.AnimalStatus == "Active");
+            if (enclosure == null) return NotFound("Enclosure does not exist");
+            
+            if (currentAnimalsInEnclosure >= enclosure.MaxCapacity)
+            {
+                return BadRequest("The enclosure has reached maximum capacity of active animals.");
+            }
+
             var animal = new Animal
             {
                 Name = animalDto.Name,
@@ -38,7 +51,8 @@ namespace ZooManagementAPI.Controllers
                 Sex = animalDto.Sex,
                 DateOfBirth = animalDto.DateOfBirth,
                 DateAcquired = animalDto.DateAcquired,
-                EnclosureId = animalDto.EnclosureId
+                EnclosureId = animalDto.EnclosureId,
+                AnimalStatus = "Active"
             };
 
             _context.Animals.Add(animal);
@@ -66,10 +80,12 @@ namespace ZooManagementAPI.Controllers
                                         string? name,
                                         int? age,
                                         DateOnly? dateAcquired,
+                                        string? enclosure,
                                         int pageSize = 5,
                                         int pageNumber = 1,
                                         string? orderResults = "species",
                                         bool descending = false
+                                        
                                         )
         {
 
@@ -86,6 +102,10 @@ namespace ZooManagementAPI.Controllers
             {
                 queryAnimals = queryAnimals.Where(animals => animals.Name.ToLower().Contains(name.ToLower()));
             }
+            if (!string.IsNullOrEmpty(enclosure))
+            {
+                queryAnimals = queryAnimals.Where(animals => animals.Enclosure.Name.ToLower().Contains(enclosure.ToLower()));
+            }
             if (age.HasValue)
             {
                 int currentYear = DateTime.Now.Year;
@@ -96,7 +116,7 @@ namespace ZooManagementAPI.Controllers
                 queryAnimals = queryAnimals.Where(animals => DateOnly.FromDateTime(animals.DateAcquired) == dateAcquired.Value);
             }
 
-            var validOrderOptions = new[] { "name", "species", "classification", "age", "date acquired" };
+            var validOrderOptions = new[] { "name", "species", "classification", "age", "date acquired", "enclosure"};
             orderResults = validOrderOptions.Contains(orderResults?.ToLower()) ? orderResults.ToLower() : "species";
             switch (orderResults)
             {
@@ -106,9 +126,13 @@ namespace ZooManagementAPI.Controllers
                 case "classification":
                     queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.Classification) : queryAnimals.OrderBy(animals => animals.Classification);
                     break;
+                case "enclosure":
+                    queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.Enclosure.Name).ThenByDescending(animals => animals.Name)
+                                    : queryAnimals.OrderBy(animals => animals.Enclosure.Name).ThenBy(animals => animals.Name);
+                    break;
                 case "age":
                     queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.DateOfBirth): queryAnimals.OrderBy(animals => animals.DateOfBirth);
-                    break;
+                    break;  
                 case "date acquired":
                     queryAnimals = descending? queryAnimals.OrderByDescending(animals => animals.DateAcquired): queryAnimals.OrderBy(animals => animals.DateAcquired);
                     break;

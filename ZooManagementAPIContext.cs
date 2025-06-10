@@ -23,14 +23,14 @@ namespace ZooManagementAPI
             var enclosures = new List<Enclosure> {
                 new Enclosure {Name = "Lion Enclosure", MaxCapacity = 10},
                 new Enclosure {Name = "Fish Enclosure", MaxCapacity = 50},
-                new Enclosure {Name = "Bird Enclosure", MaxCapacity = 30},
+                new Enclosure {Name = "Aviary Enclosure", MaxCapacity = 50},
                 new Enclosure {Name = "Monkey Enclosure", MaxCapacity = 15},
-                new Enclosure {Name = "Giraffe Enclosure", MaxCapacity = 10},
+                new Enclosure {Name = "Giraffe Enclosure", MaxCapacity = 6},
                 new Enclosure {Name = "Elephant Enclosure", MaxCapacity = 5},
                 new Enclosure {Name = "Tiger Enclosure", MaxCapacity = 10},
                 new Enclosure {Name = "Farm Animal Enclosure", MaxCapacity = 20},
-                new Enclosure {Name = "Meerkat Enclosure", MaxCapacity = 20},
-                new Enclosure {Name = "Reptile Enclosure", MaxCapacity = 20}
+                new Enclosure {Name = "Hippo Enclosure", MaxCapacity = 20},
+                new Enclosure {Name = "Reptile Enclosure", MaxCapacity = 40}
             };
 
             Enclosures.AddRange(enclosures);
@@ -53,7 +53,7 @@ namespace ZooManagementAPI
                 {"Monkey", "Mammal" },
                 {"Owl", "Bird"},
                 {"Fish", "Fish" },
-                {"Meerkat","Mammal" },
+                {"Hippo","Mammal" },
                 {"Crocodile", "Reptile"},
                 {"Dolphin", "Fish"},
                 {"Parrot", "Bird"},
@@ -71,10 +71,10 @@ namespace ZooManagementAPI
                 {"Elephant", "Elephant Enclosure" },
                 {"Monkey", "Monkey Enclosure" },
                 
-                { "Parrot", "Bird Enclosure"},
-                { "Owl", "Bird Enclosure"},
+                { "Parrot", "Aviary Enclosure"},
+                { "Owl", "Aviary Enclosure"},
                 
-                {"Meerkat","Meerkat Enclosure" },
+                {"Hippo","Hippo Enclosure" },
                 
                 {"Fish", "Fish Enclosure" },
                 {"Dolphin", "Fish Enclosure"},
